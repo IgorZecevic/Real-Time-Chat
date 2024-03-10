@@ -69,9 +69,36 @@ const validateLoginData = (username, password) => {
   return result;
 };
 
+/**
+ * Validates room data for creating messages
+ * @param {String} name - String
+ * @returns {Object} - Object that contains the properties isValid, errors and sanitizedData
+ */
+const validateCreateRoomData = (name) => {
+  const errors = {};
+
+  if (!name || !name.trim()) {
+    errors.name = 'Please enter a room name';
+  }
+
+  const isValid = Object.keys(errors).length === 0;
+
+  const result = {
+    isValid,
+    errors,
+  };
+
+  if (isValid) {
+    result.sanitizedData = { nameSanitized: name.trim() };
+  }
+
+  return result;
+};
+
 const validation = {
   validateRegisterData,
   validateLoginData,
+  validateCreateRoomData,
 };
 
 module.exports = validation;

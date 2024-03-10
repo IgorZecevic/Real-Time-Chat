@@ -35,12 +35,16 @@ const login = asyncHandler(async (req, res) => {
 });
 
 const logout = asyncHandler(async (req, res) => {
-  removeAuthCookie(res);
-
-  const user = req.user;
-  if (user) {
-    await authService.logout(req.user._id);
+  let token;
+  if (req.cookies && req.cookies.jwt) {
+    token = req.cookies.jwt;
   }
+
+  if (token) {
+    await authService.logout(token);
+  }
+
+  removeAuthCookie(res);
 
   res.status(200).json({
     isSuccess: true,

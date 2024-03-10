@@ -5,6 +5,7 @@ const httpErrors = require('../utils/httpErrors');
 const validation = require('../utils/validation');
 const { generateToken, verifyToken } = require('../utils/jwt');
 const handleError = require('../utils/handleError.js');
+const redisClient = require('../config/redis');
 
 const register = async ({ username, password, confirmPassword }) => {
   const { isValid, errors, sanitizedData } = validation.validateRegisterData(
@@ -33,6 +34,9 @@ const register = async ({ username, password, confirmPassword }) => {
       _id: user._id,
       username: user.username,
     };
+
+    // Store session info in Redis
+    await storeSessionInfoInRedis(userData);
 
     return { user: userData, token };
   } catch (error) {
@@ -63,6 +67,9 @@ const login = async ({ username, password }) => {
       username: user.username,
     };
 
+    // Store session info in Redis
+    await storeSessionInfoInRedis(userData);
+
     return { user: userData, token };
   } catch (error) {
     console.log(error);
@@ -70,9 +77,14 @@ const login = async ({ username, password }) => {
   }
 };
 
-const logout = async (userId) => {
+const logout = async (token) => {
   try {
-    // TODO: Implement redis cleanup
+    const decodedData = verifyToken(token);
+    if (!decodedData) {
+      throw new httpErrors.UnauthorizedError('Not authorized, invalid token');
+    }
+
+    await removeSessionInfoFromRedis(decodedData._id);
   } catch (error) {
     console.error(error);
     handleError(error);
@@ -83,6 +95,17 @@ const loginStatus = async (token) => {
   try {
     const userData = validateToken(token);
 
+    // Check for an active session in Redis before querying the database
+    const userSession = await getSessionInfoFromRedis(
+      `user_session:${userData._id.toString()}`
+    );
+
+    if (userSession && userSession._id) {
+      // Update session expiration
+      await updateSessionExpiryInRedis(userSession._id);
+      return { isLoggedIn: true, user: userSession };
+    }
+
     const user = await userRepository.findUserById(userData._id);
     if (!user) {
       throw new httpErrors.NotFoundError('User not found');
@@ -92,6 +115,8 @@ const loginStatus = async (token) => {
       _id: user._id,
       username: user.username,
     };
+
+    await storeSessionInfoInRedis(newUserData);
 
     return { isLoggedIn: true, user: newUserData };
   } catch (error) {
@@ -159,6 +184,52 @@ const validateToken = (token) => {
   }
 
   return userData;
+};
+
+const storeSessionInfoInRedis = async (userData) => {
+  try {
+    await redisClient.set(
+      `user_session:${userData._id.toString()}`,
+      JSON.stringify(userData),
+      'EX',
+      3600 // 1 hour
+    );
+  } catch (error) {
+    console.error(`Store session to Redis:`, error);
+  }
+};
+
+const getSessionInfoFromRedis = async (key) => {
+  try {
+    const sessionInfo = await redisClient.get(key);
+    if (!sessionInfo) {
+      return null;
+    }
+
+    return JSON.parse(sessionInfo);
+  } catch (error) {
+    console.error(`Get session from Redis:`, error);
+  }
+};
+
+const updateSessionExpiryInRedis = async (userId) => {
+  try {
+    // Update session expiration
+    await redisClient.expire(
+      `user_session:${userId.toString()}`,
+      3600 //TODO: Move to env variable with user_session
+    );
+  } catch (error) {
+    console.error(`Update session expiry in Redis:`, error);
+  }
+};
+
+const removeSessionInfoFromRedis = async (userId) => {
+  try {
+    await redisClient.del(`user_session:${userId.toString()}`);
+  } catch (error) {
+    console.error(`Remove session from Redis:`, error);
+  }
 };
 
 module.exports = {
