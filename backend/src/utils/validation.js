@@ -71,14 +71,14 @@ const validateLoginData = (username, password) => {
 
 /**
  * Validates room data for creating messages
- * @param {String} name - String
+ * @param {String} roomName - String
  * @returns {Object} - Object that contains the properties isValid, errors and sanitizedData
  */
-const validateCreateRoomData = (name) => {
+const validateCreateRoomData = (roomName) => {
   const errors = {};
 
-  if (!name || !name.trim()) {
-    errors.name = 'Please enter a room name';
+  if (!roomName || !roomName.trim()) {
+    errors.roomName = 'Please enter a room name';
   }
 
   const isValid = Object.keys(errors).length === 0;
@@ -89,7 +89,7 @@ const validateCreateRoomData = (name) => {
   };
 
   if (isValid) {
-    result.sanitizedData = { nameSanitized: name.trim() };
+    result.sanitizedData = { roomNameSanitized: roomName.trim() };
   }
 
   return result;

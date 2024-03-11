@@ -3,9 +3,9 @@ const asyncHandler = require('express-async-handler');
 const { roomService } = require('../services/index.js');
 
 const createRoom = asyncHandler(async (req, res) => {
-  const { name } = req.body;
+  const { roomName } = req.body;
 
-  const room = await roomService.createRoom(name);
+  const room = await roomService.createRoom(roomName);
 
   res.status(201).json({
     isSuccess: true,

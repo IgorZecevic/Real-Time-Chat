@@ -6,7 +6,7 @@ export const login = async (userData) => {
 };
 
 export const logout = async () => {
-  const response = await apiClient.get('/auth/logout');
+  const response = await apiClient.post('/auth/logout');
   return response.data;
 };
 

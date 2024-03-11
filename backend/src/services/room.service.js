@@ -4,20 +4,20 @@ const validation = require('../utils/validation');
 const handleError = require('../utils/handleError.js');
 const redisClient = require('../config/redis');
 
-const createRoom = async (name) => {
+const createRoom = async (roomName) => {
   const { isValid, errors, sanitizedData } =
-    validation.validateCreateRoomData(name);
+    validation.validateCreateRoomData(roomName);
 
   if (!isValid) {
     throw new httpErrors.BadRequestError('Validation failed', errors);
   }
 
-  const { nameSanitized } = sanitizedData;
+  const { roomNameSanitized } = sanitizedData;
 
   try {
-    await checkIfRoomNameIsTaken(nameSanitized);
+    await checkIfRoomNameIsTaken(roomNameSanitized);
 
-    const room = await roomRepository.createRoom({ name: nameSanitized });
+    const room = await roomRepository.createRoom({ name: roomNameSanitized });
 
     await storeRoomToRoomsListInRedis(room);
 
