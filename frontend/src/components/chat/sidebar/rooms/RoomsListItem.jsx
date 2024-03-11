@@ -7,7 +7,7 @@ import {
   ListItemText,
 } from '@mui/material';
 
-import { getFirstCharUppercase } from '../../../utils/stringHelpers';
+import { getFirstCharUppercase } from '../../../../utils/stringHelpers';
 
 const RoomListItem = React.memo(({ room }) => {
   const handleRoomClick = (roomId) => {

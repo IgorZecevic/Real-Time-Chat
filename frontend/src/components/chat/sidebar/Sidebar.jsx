@@ -3,8 +3,8 @@ import { Box, Grid, Divider, Tab, Tabs } from '@mui/material';
 import PropTypes from 'prop-types';
 
 import CurrentUser from './CurrentUser';
-import RoomsList from './RoomsList';
-import UsersList from './UsersList';
+import RoomsList from './rooms/RoomsList';
+import UsersList from './users/UsersList';
 
 const Sidebar = ({ currentUser }) => {
   const [tabValue, setTabValue] = useState(0);

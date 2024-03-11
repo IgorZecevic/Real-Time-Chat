@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { List, Box } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { getRooms } from '../../../redux/features/room/room.slice';
+import { getRooms } from '../../../../redux/features/room/room.slice';
 import RoomsListItem from './RoomsListItem';
 import AddRoomForm from './AddRoomForm';
 

@@ -3,8 +3,8 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
 
-import { createRoom } from '../../../redux/features/room/room.slice';
-import FormikField from '../../form/FormikField';
+import { createRoom } from '../../../../redux/features/room/room.slice';
+import FormikField from '../../../form/FormikField';
 
 const INTIAL_STATE = {
   roomName: '',

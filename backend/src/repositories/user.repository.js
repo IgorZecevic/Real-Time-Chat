@@ -12,8 +12,13 @@ const findUserById = async (userId) => {
   return User.findById(userId);
 };
 
+const findUsers = async () => {
+  return User.find().select('-password');
+};
+
 module.exports = {
   createUser,
   findUserByUsername,
   findUserById,
+  findUsers,
 };
