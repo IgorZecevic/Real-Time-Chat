@@ -5,6 +5,10 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { logoutUser } from '../../../redux/features/auth/auth.slice';
+import {
+  SELECT_CHAT,
+  CLEAR_MESSAGES,
+} from '../../../redux/features/chat/chat.slice';
 import { getFirstCharUppercase } from '../../../utils/stringHelpers';
 
 const CurrentUser = ({ currentUser }) => {
@@ -15,6 +19,8 @@ const CurrentUser = ({ currentUser }) => {
     const actionResult = await dispatch(logoutUser());
 
     if (logoutUser.fulfilled.match(actionResult)) {
+      dispatch(SELECT_CHAT({ chatId: null }));
+      dispatch(CLEAR_MESSAGES());
       navigate('/login');
     }
   };
@@ -34,7 +40,7 @@ const CurrentUser = ({ currentUser }) => {
       <Typography variant='subtitle1' sx={{ ml: 1 }}>
         {currentUser.username}
       </Typography>
-      <Box sx={{ flexGrow: 1 }} />{' '}
+      <Box sx={{ flexGrow: 1 }} />
       <Button
         onClick={handleLogoutUser}
         variant='outlined'

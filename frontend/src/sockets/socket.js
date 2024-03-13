@@ -1,10 +1,10 @@
 import io from 'socket.io-client';
 
 let socket;
-export const initiateSocketConnection = (userId) => {
+export const initiateSocketConnection = (user) => {
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   socket = io(BACKEND_URL, {
-    query: { userId },
+    query: { userId: user._id, username: user.username },
   });
   return socket;
 };

@@ -1,20 +1,15 @@
 import { useState, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import {
-  Box,
-  Grid,
-  Avatar,
-  Typography,
-  TextField,
-  IconButton,
-  Divider,
-} from '@mui/material';
+import { Box, Grid, TextField, IconButton, Divider } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 
 import Sidebar from '../components/chat/sidebar/Sidebar';
+import ChatHeader from '../components/chat/chatArea/ChatHeader';
+import MessagesList from '../components/chat/chatArea/messages/MessagesList';
 
 const Chat = () => {
   const user = useSelector((state) => state.auth.user);
+  const messages = useSelector((state) => state.chat.messages);
 
   const [newMessage, setNewMessage] = useState('');
 
@@ -28,6 +23,10 @@ const Chat = () => {
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') handleSendMessage();
+  };
+
+  const chatInfo = {
+    name: 'Test Chat Room',
   };
 
   return (
@@ -50,21 +49,9 @@ const Chat = () => {
           md={9}
           sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
         >
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              p: 2,
-              bgcolor: 'background.paper',
-            }}
-          >
-            <Avatar sx={{ bgcolor: 'primary.main' }}>N</Avatar>
-            <Typography variant='subtitle1' sx={{ ml: 1 }}>
-              NodeJS
-            </Typography>
-          </Box>
+          <ChatHeader chatInfo={chatInfo} />
           <Divider />
-          <Box sx={{ height: '100%' }}></Box>
+          <MessagesList messages={messages} />
           <Divider />
           <Box sx={{ display: 'flex', alignItems: 'center', p: 2 }}>
             <TextField
