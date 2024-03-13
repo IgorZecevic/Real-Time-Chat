@@ -7,7 +7,13 @@ import {
   disconnectSocket,
   getSocket,
 } from '../sockets/socket';
-import { ADD_MESSAGE } from '../redux/features/chat/chat.slice';
+import {
+  handleOnlineUsers,
+  handleUserJoined,
+  handleWelcome,
+  handleUserLeft,
+  handleMessage,
+} from '../sockets/socketHandlers';
 
 export const SocketContext = createContext();
 
@@ -24,30 +30,22 @@ export const SocketContextProvider = ({ children }) => {
 
       setSocket(socket);
 
-      socket.on('onlineUsers', setOnlineUsers);
+      socket.on('onlineUsers', handleOnlineUsers(setOnlineUsers));
+      socket.on('userJoined', handleUserJoined(dispatch));
+      socket.on('welcome', handleWelcome(dispatch));
+      socket.on('userLeft', handleUserLeft(dispatch));
+      socket.on('message', handleMessage(dispatch));
 
-      socket.on('userJoined', ({ username }) => {
-        dispatch(
-          ADD_MESSAGE({ senderId: -1, message: `${username} joined the room` })
-        );
-      });
-
-      socket.on('welcome', () => {
-        dispatch(
-          ADD_MESSAGE({
-            senderId: -1,
-            message: 'You have joined the chat room',
-          })
-        );
-      });
-
-      socket.on('userLeft', ({ username }) => {
-        dispatch(
-          ADD_MESSAGE({ senderId: -1, message: `${username} left the room` })
-        );
-      });
-
-      return () => disconnectSocket();
+      return () => {
+        if (socket) {
+          socket.off('onlineUsers', handleOnlineUsers(setOnlineUsers));
+          socket.off('userJoined', handleUserJoined(dispatch));
+          socket.off('welcome', handleWelcome(dispatch));
+          socket.off('userLeft', handleUserLeft(dispatch));
+          socket.off('message', handleMessage(dispatch));
+          disconnectSocket();
+        }
+      };
     }
   }, [user, dispatch]);
 
@@ -69,9 +67,24 @@ export const SocketContextProvider = ({ children }) => {
     [socket]
   );
 
+  const sendMessage = useCallback(
+    ({ message, senderId, roomId }) => {
+      if (socket) {
+        socket.emit('sendMessage', { message, senderId, roomId });
+      }
+    },
+    [socket]
+  );
+
   return (
     <SocketContext.Provider
-      value={{ socket: getSocket(), onlineUsers, joinRoom, leaveRoom }}
+      value={{
+        socket: getSocket(),
+        onlineUsers,
+        joinRoom,
+        leaveRoom,
+        sendMessage,
+      }}
     >
       {children}
     </SocketContext.Provider>

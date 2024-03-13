@@ -1,6 +1,6 @@
 const asyncHandler = require('express-async-handler');
 
-const { authService } = require('../services/index.js');
+const { authService } = require('../services/');
 
 const register = asyncHandler(async (req, res) => {
   const { username, password, confirmPassword } = req.body;

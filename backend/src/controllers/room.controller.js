@@ -1,6 +1,6 @@
 const asyncHandler = require('express-async-handler');
 
-const { roomService } = require('../services/index.js');
+const { roomService } = require('../services/');
 
 const createRoom = asyncHandler(async (req, res) => {
   const { roomName } = req.body;

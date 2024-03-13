@@ -3,6 +3,7 @@ const {
   markUserAsOffline,
   userJoinRoom,
   userLeaveRoom,
+  sendMessage,
 } = require('../services/chat.service');
 
 const setupSocketHandlers = (io) => {
@@ -17,6 +18,10 @@ const setupSocketHandlers = (io) => {
 
     socket.on('leaveRoom', async ({ roomId }) => {
       userLeaveRoom({ socket, username, roomId });
+    });
+
+    socket.on('sendMessage', async ({ message, senderId, roomId }) => {
+      sendMessage({ io, roomId, senderId, message });
     });
 
     socket.on('disconnect', () => {

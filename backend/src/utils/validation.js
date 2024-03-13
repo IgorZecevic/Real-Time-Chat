@@ -70,7 +70,7 @@ const validateLoginData = (username, password) => {
 };
 
 /**
- * Validates room data for creating messages
+ * Validates room data for creating rooms
  * @param {String} roomName - String
  * @returns {Object} - Object that contains the properties isValid, errors and sanitizedData
  */
@@ -95,10 +95,37 @@ const validateCreateRoomData = (roomName) => {
   return result;
 };
 
+/**
+ * Validates message data for creating messages
+ * @param {String} message - String
+ * @returns {Object} - Object that contains the properties isValid, errors and sanitizedData
+ */
+const validateCreateMessageData = (message) => {
+  const errors = {};
+
+  if (!message || !message.trim()) {
+    errors.message = 'Message cannot be empty';
+  }
+
+  const isValid = Object.keys(errors).length === 0;
+
+  const result = {
+    isValid,
+    errors,
+  };
+
+  if (isValid) {
+    result.sanitizedData = { messageSanitized: message.trim() };
+  }
+
+  return result;
+};
+
 const validation = {
   validateRegisterData,
   validateLoginData,
   validateCreateRoomData,
+  validateCreateMessageData,
 };
 
 module.exports = validation;

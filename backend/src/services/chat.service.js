@@ -1,4 +1,5 @@
 const redisClient = require('../config/redis');
+const { messageService } = require('./index');
 
 const ONLINE_USERS_KEY = 'onlineUsers';
 
@@ -80,9 +81,24 @@ const userLeaveRoom = async ({ socket, username, roomId }) => {
   }
 };
 
+const sendMessage = async ({ io, roomId, senderId, message }) => {
+  try {
+    const newMessage = await messageService.createMessage({
+      roomId,
+      senderId,
+      message,
+    });
+
+    io.to(roomId).emit('message', newMessage);
+  } catch (error) {
+    console.error('Send message to a room failed:', error);
+  }
+};
+
 module.exports = {
   markUserAsOnline,
   markUserAsOffline,
   userJoinRoom,
   userLeaveRoom,
+  sendMessage,
 };
