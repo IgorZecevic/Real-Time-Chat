@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -22,7 +23,12 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use('/api', apiRouter);
 
-// custom error middleware - must be the last thing in the middleware stack
+// custom error middleware - must be the last thing after all routes
 app.use(errorHandler);
+
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend', 'dist', 'index.html'));
+});
 
 module.exports = app;
