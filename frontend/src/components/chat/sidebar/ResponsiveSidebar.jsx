@@ -29,7 +29,7 @@ const ResponsiveSidebar = ({ currentUser }) => {
             open={drawerOpen}
             onClose={() => setDrawerOpen(false)}
           >
-            <Box sx={{ minWidth: 300 }}>
+            <Box sx={{ minWidth: 300, maxWidth: 300 }}>
               <Sidebar currentUser={currentUser} />
             </Box>
           </Drawer>
