@@ -7,43 +7,43 @@ The Real-Time Chat App is a web-based application that allows users to communica
 ## Features
 
 - User Registration and Authentication:
-  • Registration using username and password
-  • Login system that provides a token to the user for subsequent requests
-  • JWT for secure user authentication, with tokens securely stored and managed
-  • Session created using Redis
+  - Registration using username and password
+  - Login system that provides a token to the user for subsequent requests
+  - JWT for secure user authentication, with tokens securely stored and managed
+  - Session created using Redis
 
 - Real-Time Chat:
-  • Users able to join and leave rooms
-  • Users able to send messages to the specific chat room in a real-time using Socket.IO
-  • Each message contains information about user who sent it
-  • Users currently in the chat room are able to see messages in real-time
+  - Users able to join and leave rooms
+  - Users able to send messages to the specific chat room in a real-time using Socket.IO
+  - Each message contains information about user who sent it
+  - Users currently in the chat room are able to see messages in real-time
 
 - Message Storage:
-  • Messages stored to a MongoDB database
-  • Last 50 messages chached in Redis for faster history retreival
-  • On user joining the the room, latest messages are retreived and shown to the user
+  - Messages stored to a MongoDB database
+  - Last 50 messages chached in Redis for faster history retreival
+  - On user joining the the room, latest messages are retreived and shown to the user
 
 - Rate Limiting:
-  • Rate limiting implemented to prevent spamming using Redis
-  • User can send up to 10 messages per minute
+  - Rate limiting implemented to prevent spamming using Redis
+  - User can send up to 10 messages per minute
 
 - Frontend Application:
-  • Simple frontend built using React.js and Material UI
-  • Redux and redux toolkit used for global state management
+  - Simple frontend built using React.js and Material UI
+  - Redux and redux toolkit used for global state management
 
 - Deployment:
-  • Application deployed to Render
+  - Application deployed to Render
 
 ## Extra Features
 
 - User Online Status:
-  • User's online status shown in real time
+  - User's online status shown in real time
 
 - Persistent Chat Rooms:
-  • User can create chat rooms
-  • Room is stored to the persistant database MongoDB
-  • Room is added to the Redis cache for faster rooms retreival
-  • Users can join the room and start to chat
+  - User can create chat rooms
+  - Room is stored to the persistant database MongoDB
+  - Room is added to the Redis cache for faster rooms retreival
+  - Users can join the room and start to chat
 
 ## Installation
 
