@@ -33,8 +33,8 @@ https://real-time-chat-t1yz.onrender.com
 
 ## Testing Accounts
 
-username: JohnDoe
-password: 123456
+username: JohnDoe <br/>
+password: 123456<br/>
 
-username: JaneSmith
-password: 123456
+username: JaneSmith<br/>
+password: 123456<br/>
