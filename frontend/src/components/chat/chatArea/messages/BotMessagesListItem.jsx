@@ -7,6 +7,7 @@ const BotMessagesListItem = ({ message }) => {
       sx={{
         padding: 1,
         marginBottom: 1,
+        textAlign: 'center',
       }}
     >
       <ListItemText

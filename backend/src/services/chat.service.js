@@ -47,11 +47,6 @@ const userJoinRoom = async ({ socket, userId, username, roomId }) => {
 
     socket.join(roomId);
 
-    // Fetch messages for the room
-
-    // Emit historical messages to the user who just joined
-    //socket.emit('historicalMessages', messages);
-
     // Notify others in the room that a new user has joined
     socket.to(roomId).emit('userJoined', {
       username,
@@ -95,10 +90,43 @@ const sendMessage = async ({ io, roomId, senderId, message }) => {
   }
 };
 
+const showRecentRoomMessages = async ({ socket, roomId }) => {
+  try {
+    const messages = await messageService.getMessagesByRoomId(roomId);
+    socket.emit('messageHistory', messages);
+  } catch (error) {
+    console.error('Show room messages history failed:', error);
+  }
+};
+
+const canSendMessage = async ({ socket, senderId }) => {
+  try {
+    const limit = 10;
+    const key = `msg_count:${senderId}:${new Date().getMinutes()}`;
+    const currentCount = (await redisClient.get(key)) || 0;
+
+    if (currentCount >= limit) {
+      socket.emit('rateLimitExceeded', 'You have exceeded the message limit.');
+      return false;
+    }
+
+    await redisClient
+      .multi()
+      .set(key, parseInt(currentCount) + 1, 'EX', 60)
+      .exec();
+
+    return true;
+  } catch (error) {
+    console.error('Check if user can send message failed:', error);
+  }
+};
+
 module.exports = {
   markUserAsOnline,
   markUserAsOffline,
   userJoinRoom,
   userLeaveRoom,
   sendMessage,
+  showRecentRoomMessages,
+  canSendMessage,
 };

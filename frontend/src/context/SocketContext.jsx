@@ -2,17 +2,15 @@ import { createContext, useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 
-import {
-  initiateSocketConnection,
-  disconnectSocket,
-  getSocket,
-} from '../sockets/socket';
+import { initiateSocketConnection, disconnectSocket } from '../sockets/socket';
 import {
   handleOnlineUsers,
   handleUserJoined,
   handleWelcome,
   handleUserLeft,
   handleMessage,
+  handleMessageHistoryList,
+  handleRateLimitExceeded,
 } from '../sockets/socketHandlers';
 
 export const SocketContext = createContext();
@@ -35,6 +33,8 @@ export const SocketContextProvider = ({ children }) => {
       socket.on('welcome', handleWelcome(dispatch));
       socket.on('userLeft', handleUserLeft(dispatch));
       socket.on('message', handleMessage(dispatch));
+      socket.on('messageHistory', handleMessageHistoryList(dispatch));
+      socket.on('rateLimitExceeded', handleRateLimitExceeded());
 
       return () => {
         if (socket) {
@@ -43,6 +43,8 @@ export const SocketContextProvider = ({ children }) => {
           socket.off('welcome', handleWelcome(dispatch));
           socket.off('userLeft', handleUserLeft(dispatch));
           socket.off('message', handleMessage(dispatch));
+          socket.off('messageHistory', handleMessageHistoryList(dispatch));
+          socket.off('rateLimitExceeded', handleRateLimitExceeded());
           disconnectSocket();
         }
       };
@@ -76,14 +78,23 @@ export const SocketContextProvider = ({ children }) => {
     [socket]
   );
 
+  const requestMessageHistory = useCallback(
+    (roomId) => {
+      if (socket) {
+        socket.emit('requestMessageHistory', { roomId });
+      }
+    },
+    [socket]
+  );
+
   return (
     <SocketContext.Provider
       value={{
-        socket: getSocket(),
         onlineUsers,
         joinRoom,
         leaveRoom,
         sendMessage,
+        requestMessageHistory,
       }}
     >
       {children}

@@ -17,7 +17,7 @@ const RoomListItem = React.memo(({ room }) => {
 
   const chat = useSelector((state) => state.chat);
 
-  const { joinRoom, leaveRoom } = useSocketContext();
+  const { joinRoom, leaveRoom, requestMessageHistory } = useSocketContext();
 
   const handleRoomClick = (roomId) => {
     if (roomId === chat.selectedChatId) return;
@@ -28,6 +28,7 @@ const RoomListItem = React.memo(({ room }) => {
 
     dispatch(SELECT_CHAT({ chatId: roomId }));
     joinRoom(roomId);
+    requestMessageHistory(roomId);
   };
 
   return (

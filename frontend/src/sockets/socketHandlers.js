@@ -1,4 +1,9 @@
-import { ADD_MESSAGE } from '../redux/features/chat/chat.slice';
+import { toast } from 'react-toastify';
+
+import {
+  SET_HISTORY_MESSAGES,
+  ADD_MESSAGE,
+} from '../redux/features/chat/chat.slice';
 
 export const handleOnlineUsers = (setOnlineUsers) => (onlineUsers) => {
   setOnlineUsers(onlineUsers);
@@ -31,4 +36,12 @@ export const handleUserLeft =
 
 export const handleMessage = (dispatch) => (newMessage) => {
   dispatch(ADD_MESSAGE(newMessage));
+};
+
+export const handleMessageHistoryList = (dispatch) => (messages) => {
+  dispatch(SET_HISTORY_MESSAGES(messages));
+};
+
+export const handleRateLimitExceeded = () => (message) => {
+  toast.error(message);
 };

@@ -12,7 +12,7 @@ app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy());
 app.use(
   cors({
-    origin: ['http://localhost:3000'],
+    origin: [process.env.FRONTEND_URL],
     credentials: true,
   })
 );

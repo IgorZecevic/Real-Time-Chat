@@ -28,6 +28,20 @@ const createRoom = async (roomName) => {
   }
 };
 
+const createPrivateRoom = async ({ senderId, receiverId }) => {
+  try {
+    const room = await roomRepository.createRoom({
+      name: 'Private Room',
+      isPrivate: true,
+      participants: [senderId, receiverId],
+    });
+    return room;
+  } catch (error) {
+    console.log(error);
+    handleError(error);
+  }
+};
+
 const getRooms = async () => {
   try {
     let rooms = await getRoomsListFromRedis();
@@ -35,7 +49,7 @@ const getRooms = async () => {
       return rooms;
     }
 
-    rooms = await roomRepository.findRooms();
+    rooms = await roomRepository.findRooms({ isPrivate: false });
 
     rooms.forEach(async (room) => {
       await storeRoomToRoomsListInRedis(room);
@@ -44,6 +58,19 @@ const getRooms = async () => {
     return rooms;
   } catch (error) {
     console.error(error);
+    handleError(error);
+  }
+};
+
+const getPrivateRoomByParticipants = async ({ senderId, receiverId }) => {
+  try {
+    const room = await roomRepository.findPrivateRoomByParticipants({
+      senderId,
+      receiverId,
+    });
+    return room;
+  } catch (error) {
+    console.log(error);
     handleError(error);
   }
 };
@@ -77,4 +104,6 @@ const getRoomsListFromRedis = async () => {
 module.exports = {
   createRoom,
   getRooms,
+  createPrivateRoom,
+  getPrivateRoomByParticipants,
 };

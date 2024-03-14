@@ -4,9 +4,14 @@ const {
   userJoinRoom,
   userLeaveRoom,
   sendMessage,
+  showRecentRoomMessages,
+  canSendMessage,
 } = require('../services/chat.service');
+const authSocketMiddleware = require('../middlewares/authSocket.middleware');
 
 const setupSocketHandlers = (io) => {
+  io.use(authSocketMiddleware);
+
   io.on('connection', (socket) => {
     const { userId, username } = socket.handshake.query;
 
@@ -21,7 +26,14 @@ const setupSocketHandlers = (io) => {
     });
 
     socket.on('sendMessage', async ({ message, senderId, roomId }) => {
+      const canSend = await canSendMessage({ socket, senderId });
+      if (!canSend) return;
+
       sendMessage({ io, roomId, senderId, message });
+    });
+
+    socket.on('requestMessageHistory', async ({ roomId }) => {
+      showRecentRoomMessages({ socket, roomId });
     });
 
     socket.on('disconnect', () => {

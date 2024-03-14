@@ -32,7 +32,7 @@ const authenticate = asyncHandler(async (req, res, next) => {
     }
 
     // If session data does not exist in Redis, retrieve user from DB as a fallback
-    const user = await userRepository.findUserById(decoded.id);
+    const user = await userRepository.findUserById(decodedData._id);
     if (!user) {
       throw new httpErrors.UnauthorizedError('Not authorized, user not found');
     }

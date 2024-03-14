@@ -22,7 +22,7 @@ const MessagesList = ({ messages }) => {
     return <NoChatSelected />;
   }
 
-  if (chat.messages.length === 0) {
+  if (chat.isPrivate && chat.messages.length === 0) {
     return <NoMessages />;
   }
 
@@ -39,7 +39,7 @@ const MessagesList = ({ messages }) => {
             <MessagesListItem
               key={message._id}
               message={message}
-              isCurrentUser={user._id === message.senderId._id}
+              isCurrentUser={user._id === message.senderId?._id}
             />
           )
         )}

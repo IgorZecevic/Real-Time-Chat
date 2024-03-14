@@ -1,12 +1,14 @@
 import { useState, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { Box, TextField, IconButton } from '@mui/material';
+import { Box, TextField, IconButton, useMediaQuery } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 
 import { useSocketContext } from '../../../customHooks/useSocketContext';
 
 const ChatInput = () => {
   const { sendMessage } = useSocketContext();
+
+  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down('md'));
 
   const user = useSelector((state) => state.auth.user);
   const chat = useSelector((state) => state.chat);
@@ -34,7 +36,14 @@ const ChatInput = () => {
   };
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', p: 2 }}>
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        p: 2,
+        paddingBottom: isSmallScreen ? '5rem' : '1rem',
+      }}
+    >
       <TextField
         fullWidth
         size='small'

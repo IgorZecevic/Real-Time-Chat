@@ -25,6 +25,23 @@ const ChatHeader = ({ chatInfo }) => {
     dispatch(CLEAR_MESSAGES());
   };
 
+  if (chatInfo === null) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          p: 2,
+          bgcolor: 'background.paper',
+        }}
+      >
+        <Typography variant='subtitle1' fontWeight='bold'>
+          Welcome to Real Time Chat App
+        </Typography>
+      </Box>
+    );
+  }
+
   return (
     <Box
       sx={{
@@ -54,7 +71,7 @@ const ChatHeader = ({ chatInfo }) => {
 
 ChatHeader.propTypes = {
   chatInfo: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-  }).isRequired,
+    name: PropTypes.string,
+  }),
 };
 export default ChatHeader;

@@ -8,12 +8,23 @@ const findRoomByName = async (name) => {
   return Room.findOne({ name });
 };
 
-const findRooms = async () => {
-  return Room.find();
+const findPrivateRoomByParticipants = async ({ senderId, receiverId }) => {
+  return Room.findOne({
+    isPrivate: true,
+    $and: [
+      { participants: { $in: [senderId] } },
+      { participants: { $in: [receiverId] } },
+    ],
+  });
+};
+
+const findRooms = async (criteria) => {
+  return Room.find(criteria);
 };
 
 module.exports = {
   createRoom,
   findRoomByName,
   findRooms,
+  findPrivateRoomByParticipants,
 };

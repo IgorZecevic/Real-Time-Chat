@@ -1,18 +1,28 @@
 import { useSelector } from 'react-redux';
 import { Box, Grid, Divider } from '@mui/material';
 
-import Sidebar from '../components/chat/sidebar/Sidebar';
+import ResponsiveSidebar from '../components/chat/sidebar/ResponsiveSidebar';
 import ChatHeader from '../components/chat/chatArea/ChatHeader';
 import MessagesList from '../components/chat/chatArea/messages/MessagesList';
 import ChatInput from '../components/chat/chatArea/ChatInput';
 
 const Chat = () => {
   const user = useSelector((state) => state.auth.user);
-  const messages = useSelector((state) => state.chat.messages);
+  const rooms = useSelector((state) => state.room.rooms);
+  const { messages, isPrivate, selectedChatId } = useSelector(
+    (state) => state.chat
+  );
 
-  const chatInfo = {
-    name: 'Test Chat Room',
-  };
+  let chatInfo = null;
+
+  if (selectedChatId && !isPrivate) {
+    if (rooms.length > 0) {
+      const selectedRoom = rooms.find((room) => room._id === selectedChatId);
+      chatInfo = {
+        name: selectedRoom.name,
+      };
+    }
+  }
 
   return (
     <Box
@@ -25,13 +35,13 @@ const Chat = () => {
     >
       <Grid container sx={{ height: '100%' }}>
         {/* Sidebar */}
-        <Sidebar currentUser={user} />
+        <ResponsiveSidebar currentUser={user} />
 
         {/* Chat Section */}
         <Grid
           item
           xs={12}
-          md={9}
+          md={8}
           sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
         >
           <ChatHeader chatInfo={chatInfo} />

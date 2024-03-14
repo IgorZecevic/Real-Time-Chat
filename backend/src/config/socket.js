@@ -8,7 +8,7 @@ module.exports = {
     const server = http.createServer(app);
     io = socketIO(server, {
       cors: {
-        origin: 'http://localhost:3000',
+        origin: process.env.FRONTEND_URL,
         methods: ['GET', 'POST'],
         credentials: true,
       },
