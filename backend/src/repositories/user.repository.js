@@ -5,7 +5,7 @@ const createUser = async (userData) => {
 };
 
 const findUserByUsername = async (username) => {
-  return User.findOne({ username });
+  return User.findOne({ username: new RegExp(`^${username}$`, 'i') });
 };
 
 const findUserById = async (userId) => {

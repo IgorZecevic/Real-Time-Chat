@@ -16,6 +16,10 @@ const validateRegisterData = (username, password, confirmPassword) => {
     errors.username = 'Username must be at least 3 characters long';
   }
 
+  if (username && username.includes(' ')) {
+    errors.username = 'Username cannot contain spaces';
+  }
+
   if (!password || password.length < 6) {
     errors.password = 'Password must be at least 6 characters long';
   }

@@ -11,10 +11,21 @@ export const registerUser = createAsyncThunk(
       toast.success(response.message);
       return response;
     } catch (error) {
-      toast.error(error.response?.data?.message || error.message);
-      return thunkAPI.rejectWithValue(
-        error.response?.data?.message || error.message
-      );
+      const isValidationError =
+        error.response?.data?.message === 'Validation failed';
+
+      if (isValidationError && error.response?.data?.errors) {
+        const errorsDetails = Object.values(error.response.data.errors).join(
+          ', '
+        );
+        toast.error(errorsDetails);
+        return thunkAPI.rejectWithValue(errorsDetails);
+      } else {
+        toast.error(error.response?.data?.message || error.message);
+        return thunkAPI.rejectWithValue(
+          error.response?.data?.message || error.message
+        );
+      }
     }
   }
 );
@@ -27,10 +38,21 @@ export const loginUser = createAsyncThunk(
       toast.success(response?.data?.message);
       return response;
     } catch (error) {
-      toast.error(error.response?.data?.message || error.message);
-      return thunkAPI.rejectWithValue(
-        error.response?.data?.message || error.message
-      );
+      const isValidationError =
+        error.response?.data?.message === 'Validation failed';
+
+      if (isValidationError && error.response?.data?.errors) {
+        const errorsDetails = Object.values(error.response.data.errors).join(
+          ', '
+        );
+        toast.error(errorsDetails);
+        return thunkAPI.rejectWithValue(errorsDetails);
+      } else {
+        toast.error(error.response?.data?.message || error.message);
+        return thunkAPI.rejectWithValue(
+          error.response?.data?.message || error.message
+        );
+      }
     }
   }
 );
