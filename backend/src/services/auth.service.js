@@ -237,4 +237,9 @@ module.exports = {
   login,
   logout,
   loginStatus,
+  checkIfUsernameIsTaken,
+  hashUserPassword,
+  createUserAndGenerateToken,
+  storeSessionInfoInRedis,
+  updateSessionExpiryInRedis,
 };

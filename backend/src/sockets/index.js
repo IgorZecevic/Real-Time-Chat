@@ -37,7 +37,7 @@ const setupSocketHandlers = (io) => {
     });
 
     socket.on('disconnect', () => {
-      userLeaveRoom({ socket, username, roomId: null });
+      // userLeaveRoom({ socket, username, roomId: null }); All will be handled by markUserAsOffline
       markUserAsOffline(io, socket);
     });
   });
