@@ -41,7 +41,7 @@ const emitOnlineUsers = async (io) => {
   }
 };
 
-const userJoinRoom = async ({ socket, userId, username, roomId }) => {
+const userJoinRoom = async ({ socket, username, roomId }) => {
   try {
     await redisClient.hset(`socketData:${socket.id}`, 'roomId', roomId);
 

@@ -18,7 +18,7 @@ const setupSocketHandlers = (io) => {
     markUserAsOnline(io, socket, userId);
 
     socket.on('joinRoom', async ({ roomId }) => {
-      userJoinRoom({ socket, userId, username, roomId });
+      userJoinRoom({ socket, username, roomId });
     });
 
     socket.on('leaveRoom', async ({ roomId }) => {
