@@ -30,7 +30,7 @@ const authenticate = asyncHandler(async (req, res, next) => {
 
     if (sessionData) {
       // Update session expiry in Redis
-      await authService.updateSessionExpiryInRedis(userData._id);
+      await authService.updateSessionExpiryInRedis(decodedData._id);
 
       req.user = JSON.parse(sessionData);
       return next();
@@ -51,6 +51,7 @@ const authenticate = asyncHandler(async (req, res, next) => {
 
     next();
   } catch (error) {
+    console.error(error);
     throw new httpErrors.UnauthorizedError('Not authorized');
   }
 });
